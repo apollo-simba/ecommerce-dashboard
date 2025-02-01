@@ -13,7 +13,7 @@ export default function ContactForm() {
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
-
+    //this is the function for submit
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
