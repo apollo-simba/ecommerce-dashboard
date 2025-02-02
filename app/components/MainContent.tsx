@@ -2,7 +2,7 @@
 import React, { FC, useState ,useEffect} from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import "../styles/globals.css";
-
+import "@/app/styles/main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface Document{
@@ -11,6 +11,14 @@ interface Document{
     date: string,
     image?: string,
 }
+
+interface Contact {
+    id: number,
+    fullname: string,
+    email: string,
+    message: string,
+}
+
 const MainContent: FC = () => {
     const[count, setCount] = useState<number>(0);
     const [documents, setDocuments] = useState<Document[]>([]);
@@ -35,7 +43,43 @@ const MainContent: FC = () => {
         setCount(count-1);
         localStorage.setItem('document',JSON.stringify(updatedDocuments));
     }
-      
+    const [content, setContent] = useState<Contact[]>([]);
+        
+        const getContactHistory = async () => {
+            try {
+                const res = await fetch("dashboard/api/contact", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+                
+            );
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+    
+            console.log(res);
+    
+            const data = await res.json();
+            console.log(data);
+            
+            if(Array.isArray(data.data)){
+                
+                setContent(data.data);
+            }else{
+                console.log('Expected Array but got:',data);
+                setContent([]);
+            } 
+        }   catch (error) {
+            console.error("Error fetching contact history:", error);
+            setContent([]);
+            }
+        }
+        useEffect(() => {
+            getContactHistory();
+             
+        },[]);  
     
     return (
         <main>
@@ -78,66 +122,106 @@ const MainContent: FC = () => {
                     </span>
                 </li>
             </ul>
-            <div className="w-50 max-w-[400px] ml-[50px] px-4 mt-5">
+            <div className="w-1200 max-w-[2000px] ml-[50px] mr-[50px] px-4 mt-5 ">
                 <div className="row">
-                    <div className="col-md-1 border-end">
+                    <div className="col-md-1-  border-end">
 
                     </div>
-                    <div className="col">
-                    <h2>Document List</h2>
+                    <div className="col flex" >
+                        <div className="ml-[5px]">
+                            <h2>Document List</h2>
 
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredDocuments.map((document)=>(
-                                <tr key={document.id}>
-                                    <td>{document.id}</td>
-                                    <td>{document.name}</td>
-                                    <td>{document.date}</td>
-                                    <td>
-                                        <button className="btn btn-primary" onClick={()=>handleView(document.id)}>
-                                            View
-                                        </button>
-                                    
-                                        <button className="btn btn-primary" onClick={()=>handleDelete(document.id)}>
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredDocuments.map((document)=>(
+                                        <tr key={document.id}>
+                                            <td>{document.id}</td>
+                                            <td>{document.name}</td>
+                                            <td>{document.date}</td>
+                                            <td>
+                                                <button className="btn btn-primary" onClick={()=>handleView(document.id)}>
+                                                    View
+                                                </button>
+                                            
+                                                <button className="btn btn-primary" onClick={()=>handleDelete(document.id)}>
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
 
-                        </tbody>   
-                    </table>
-                    {showModal && selectedDocument && (
-                        <div className="modal" tabIndex={-1} role="dialog" style={{
-                            display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                        }}>
-                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title">{selectedDocument.name}</h1>
-                                        <button type="button" className="close"
-                                            onClick={() => setShowModal(false)}>
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        {selectedDocument.image && (
-                                            <img src={selectedDocument.image} alt="Document"
-                                                className="img-fluid" />
-                                        )}
+                                </tbody>   
+                            </table>
+                        </div>
+                    
+                        {showModal && selectedDocument && (
+                            <div className="modal" tabIndex={-1} role="dialog" style={{
+                                display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                            }}>
+                                <div className="modal-dialog modal-dialog-centered" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h1 className="modal-title">{selectedDocument.name}</h1>
+                                            <button type="button" className="close"
+                                                onClick={() => setShowModal(false)}>
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-body">
+                                            {selectedDocument.image && (
+                                                <img src={selectedDocument.image} alt="Document"
+                                                    className="img-fluid" />
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         )}
+                        <form onSubmit={getContactHistory}>
+
+        
+                        <div className="w-50 max-w-[400px] ml-[50px] px-4 mt-5">
+                                <div className="db">
+                                    <div className="col-md-1 border-end"></div>
+
+                                    <div className="col">
+                                    <h2>Data List</h2>
+                                    <table className="table">
+                                
+                                        <thead>
+                                            <tr>
+                                                
+                                                <th>fullname</th>
+                                                <th>email</th>
+                                                <th>message</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {content.map((document)=>(
+                                                <tr key={document.email}>
+                                                    
+                                                    <td>{document.fullname}</td>
+                                                    <td>{document.email}</td>
+                                                    <td>{document.message}</td>
+                                                
+                                                </tr>
+                                            ))}
+
+                                        </tbody> 
+                                        
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
                         
                 </div>
                 
