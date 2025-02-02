@@ -2,30 +2,13 @@
 import React, { FC } from "react";
 
 import MainContent from "../components/MainContent";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
-
-
+import ContactHistory from "../components/ContactHistory";
 const Home: FC = () => {
     return (
-        <div>
-  
-        {/* SIDEBAR */}
-        
-        {/* SIDEBAR */}
-        {/* CONTENT */}
         <div id="content">
-            {/* NAVBAR */}
-            
-            {/* NAVBAR */}
-
-            {/* MAIN */}
             <MainContent />
-            {/* MAIN */}
+            <ContactHistory />
         </div>
-        {/* CONTENT */}
-        </div>
-
     );
 };
 

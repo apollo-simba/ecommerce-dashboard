@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 // Define an interface representing a document in MongoDB
 export interface IContact extends Document {
+    id: number;
     fullname: string;
     email: string;
     message: string;

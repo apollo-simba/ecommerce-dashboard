@@ -8,15 +8,15 @@ interface ContactResponse {
 }
 
 export default function ContactForm() {
+    
     const [fullname, setFullname] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
-    //this is the function for submit
+    
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
-
         try {
             const res = await fetch("api/contact", {
                 method: "POST",
@@ -24,6 +24,7 @@ export default function ContactForm() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    
                     fullname,
                     email,
                     message,
@@ -49,10 +50,10 @@ export default function ContactForm() {
             setSuccess(false);
         }
     };
-
+    
     return (
         <>
-            <form
+            <form   
                 onSubmit={handleSubmit}
                 className="py-4 mt-4 border-t flex flex-col gap-5"
             >
@@ -101,6 +102,7 @@ export default function ContactForm() {
                 <button
                     className="bg-green-700 p-3 text-white font-bold"
                     type="submit"
+                    
                 >
                     Send
                 </button>
@@ -119,4 +121,4 @@ export default function ContactForm() {
             </div>
         </>
     );
-}
+};

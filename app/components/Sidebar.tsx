@@ -43,10 +43,10 @@ const Sidebar: FC = () => {
                     </Link>
                 </li>
                 <li>
-                    <a href="#">
+                    <Link href="/dashboard/Analytics">
                         <i className="bx bxs-chart"></i>
                         <span className="text">Analytics</span>
-                    </a>
+                    </Link>
                 </li>
             </ul>
             <ul className="side-menu">

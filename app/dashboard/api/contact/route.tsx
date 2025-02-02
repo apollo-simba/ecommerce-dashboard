@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 interface ContactRequestBody {
+    id: number,
     fullname: string;
     email: string;
     message: string;
@@ -13,11 +14,26 @@ interface ValidationError {
     [key: string]: { message: string };
 }
 
-export async function POST(req: Request): Promise<Response> {
-    const {fullname, email, message }: ContactRequestBody = await req.json();
+export async function GET(): Promise<Response> {
     try {
         await connectDB();
-        await Contact.create({ fullname, email, message });
+        const data = await Contact.find();
+        return NextResponse.json({
+            data: data,
+            success: true,
+        });
+    }
+    catch (error: unknown) {
+        return NextResponse.json({ msg: ["Unable to send message."], });
+    }
+}
+
+
+export async function POST(req: Request): Promise<Response> {
+    const {id, fullname, email, message }: ContactRequestBody = await req.json();
+    try {
+        await connectDB();
+        await Contact.create({ id, fullname, email, message });
         return NextResponse.json({
             msg: ["Message sent successfully"],
             success: true,

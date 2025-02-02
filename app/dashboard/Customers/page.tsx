@@ -24,6 +24,8 @@ export default function Home() {
   const [dueTime, setDueTime] = useState<string>('');
   const [completedTasks, setCompletedTasks] = useState<Set<number>>(new Set());
 
+  const [count, setCount] = useState<number>(0);
+
   const addTask = (): void => {
     console.log("add button clicked")
     if (!title || !description || !dueDate || !dueTime) return;
@@ -39,6 +41,7 @@ export default function Home() {
     setDescription('');
     setDueDate('');
     setDueTime('');
+    // localStorage.setItem('doc',JSON.stringify())
   };
   useEffect(() => {
     const reminders = tasks.map((task) => {
@@ -52,6 +55,8 @@ export default function Home() {
           },timeDiff - 6000);
        
     }
+
+
     console.log("the null");
       return null;
   });

@@ -19,11 +19,7 @@ const MainContent: FC = () => {
     useEffect(()=>{
         const storedDocuments = JSON.parse(localStorage.getItem('document')||'[]');
         setDocuments(storedDocuments);
-        if(documents){
-            const value = JSON.parse(localStorage.getItem('document') || '[]');
-            
-            console.log(count);
-        }
+            setCount(storedDocuments.length);
     },[]);
     const filteredDocuments = documents.filter(document =>
         document.name.toLowerCase()
@@ -36,6 +32,7 @@ const MainContent: FC = () => {
     const handleDelete =(id:number)=>{
         const updatedDocuments = documents.filter(doc => doc.id !== id);
         setDocuments(updatedDocuments);
+        setCount(count-1);
         localStorage.setItem('document',JSON.stringify(updatedDocuments));
     }
       
@@ -61,7 +58,7 @@ const MainContent: FC = () => {
                 <li>
                     <i className="bx bxs-cart"></i>
                     <span className="text">
-                        <h3>222</h3>
+                        <h3>{count}</h3>
                         <button >New Orders</button>
                         
                     </span>
@@ -81,7 +78,7 @@ const MainContent: FC = () => {
                     </span>
                 </li>
             </ul>
-            <div className="container mt-5">
+            <div className="w-50 max-w-[400px] ml-[50px] px-4 mt-5">
                 <div className="row">
                     <div className="col-md-1 border-end">
 
@@ -143,7 +140,9 @@ const MainContent: FC = () => {
                         )}
                         
                 </div>
-                </div>
+                
+            </div>
+            
             </div>
         </main>
     );
