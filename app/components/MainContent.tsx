@@ -13,7 +13,6 @@ interface Document{
 }
 
 interface Contact {
-    id: number,
     fullname: string,
     email: string,
     message: string,
@@ -38,6 +37,7 @@ const MainContent: FC = () => {
         setShowModal(true);
     };
     const handleDelete =(id:number)=>{
+        console.log('this button clicked');
         const updatedDocuments = documents.filter(doc => doc.id !== id);
         setDocuments(updatedDocuments);
         setCount(count-1);
@@ -45,41 +45,64 @@ const MainContent: FC = () => {
     }
     const [content, setContent] = useState<Contact[]>([]);
         
-        const getContactHistory = async () => {
-            try {
-                const res = await fetch("dashboard/api/contact", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-                
-            );
-            if (!res.ok) {
-                throw new Error(`HTTP error! Status: ${res.status}`);
+    const getContactHistory = async () => {
+        try {
+            const res = await fetch("dashboard/api/contact", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             }
-    
-            console.log(res);
-    
-            const data = await res.json();
-            console.log(data);
             
-            if(Array.isArray(data.data)){
-                
-                setContent(data.data);
-            }else{
-                console.log('Expected Array but got:',data);
-                setContent([]);
-            } 
-        }   catch (error) {
-            console.error("Error fetching contact history:", error);
-            setContent([]);
-            }
+        );
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
         }
-        useEffect(() => {
-            getContactHistory();
-             
-        },[]);  
+
+        console.log(res);
+
+        const data = await res.json();
+        console.log(data);
+        
+        if(Array.isArray(data.data)){
+            
+            setContent(data.data);
+        }else{
+            console.log('Expected Array but got:',data);
+            setContent([]);
+        } 
+    }   catch (error) {
+        console.error("Error fetching contact history:", error);
+        setContent([]);
+        }
+    };
+    useEffect(() => {
+        getContactHistory();
+            
+    },[]);  
+    const deleteEvent = async(email:string) => {
+        console.log('this event happened.');
+        try {
+            const resp = await fetch("dashboard/api/contact", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email }),
+            });
+            console.log('this stage happened.');
+            if (!resp.ok) {
+                throw new Error(`Error: ${resp.status}`);
+            }
+    
+            console.log("Delete request successful.");
+            setContent((prevContent) => prevContent.filter(item => item.email !== email));
+            console.log("Updated content:", content); // This may show stale data due to async updates
+        } catch (error) {
+            console.error("Error deleting contact:", error);
+        }
+        
+    };
     
     return (
         <main>
@@ -122,13 +145,13 @@ const MainContent: FC = () => {
                     </span>
                 </li>
             </ul>
-            <div className="w-1200 max-w-[2000px] ml-[50px] mr-[50px] px-4 mt-5 ">
-                <div className="row">
+            <div className="w-full max-w-[1800px] ml-[40px] mr-[40px] px-4 mt-5 ">
+                <div >
                     <div className="col-md-1-  border-end">
 
                     </div>
-                    <div className="col flex" >
-                        <div className="ml-[5px]">
+                    <div className="db" >
+                        <div className="first-part">
                             <h2>Document List</h2>
 
                             <table className="table">
@@ -185,11 +208,11 @@ const MainContent: FC = () => {
                                 </div>
                             </div>
                         )}
-                        <form onSubmit={getContactHistory}>
+                        <form >
 
         
-                        <div className="w-50 max-w-[400px] ml-[50px] px-4 mt-5">
-                                <div className="db">
+                        <div className="w-full max-w-[700px]  px-4 mr-[300px]">
+                                <div className="second-part">
                                     <div className="col-md-1 border-end"></div>
 
                                     <div className="col">
@@ -202,6 +225,7 @@ const MainContent: FC = () => {
                                                 <th>fullname</th>
                                                 <th>email</th>
                                                 <th>message</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -211,7 +235,9 @@ const MainContent: FC = () => {
                                                     <td>{document.fullname}</td>
                                                     <td>{document.email}</td>
                                                     <td>{document.message}</td>
-                                                
+                                                    <td>
+                                                        <button className="btn btn-primary" type="button" onClick={()=>deleteEvent(document.email)}>Delete</button>
+                                                    </td>
                                                 </tr>
                                             ))}
 

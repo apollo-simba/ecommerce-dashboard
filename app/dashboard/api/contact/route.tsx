@@ -30,10 +30,10 @@ export async function GET(): Promise<Response> {
 
 
 export async function POST(req: Request): Promise<Response> {
-    const {id, fullname, email, message }: ContactRequestBody = await req.json();
+    const { fullname, email, message }: ContactRequestBody = await req.json();
     try {
         await connectDB();
-        await Contact.create({ id, fullname, email, message });
+        await Contact.create({ fullname, email, message });
         return NextResponse.json({
             msg: ["Message sent successfully"],
             success: true,
@@ -50,5 +50,26 @@ export async function POST(req: Request): Promise<Response> {
                 msg: ["Unable to send message."],
             });
         }
+    }
+}
+export async function DELETE(req: Request) {
+    try {
+        const { email } = await req.json(); // Extract email from request body
+
+        if (!email) {
+            return NextResponse.json({ message: "Email is required" }, { status: 400 });
+        }
+
+        await connectDB(); // Connect to MongoDB
+
+        const deletedContact = await Contact.findOneAndDelete({ email }); // Delete by email
+
+        if (!deletedContact) {
+            return NextResponse.json({ message: "Contact not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Contact deleted successfully" }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Error deleting contact", error }, { status: 500 });
     }
 }
