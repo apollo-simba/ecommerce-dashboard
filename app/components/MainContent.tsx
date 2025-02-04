@@ -7,6 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
+
+
 interface Document{
     id: number,
     name: string,
@@ -118,10 +120,10 @@ const MainContent: FC = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                },
+                },//tells the server that the request body contains JSON data.
                 body: JSON.stringify({ email, fullname: editFullname }),
-            });
-    
+            });//converts the Javascript object {email,fullname:editFullname} into a JSON string.
+            //so resp variable is assigned the value-updatedData from MongoDB.
             if (!resp.ok) {
                 const errorData = await resp.json();
                 throw new Error(`Error: ${resp.status} - ${errorData.error}`);
@@ -130,7 +132,7 @@ const MainContent: FC = () => {
             console.log("Update successful");
     
             // Fetch updated data from MongoDB
-            await getContactHistory();
+            await getContactHistory();// sends updatedData to MongoDB again.s
     
             setIsEditThis(null);
         } catch (error) {
@@ -141,26 +143,6 @@ const MainContent: FC = () => {
     const cancelEdit = () => {
         setIsEditThis(null);
     };
-
-    // Handle delete event
-    // const deleteEvent = async (email: string) => {
-    //     try {
-    //         const resp = await fetch("dashboard/api/contact", {
-    //             method: "DELETE",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({ email }),
-    //         });
-
-    //         if (!resp.ok) throw new Error(`Error: ${resp.status}`);
-
-    //         console.log("Delete request successful.");
-    //         setContent((prevContent) => prevContent.filter((item) => item.email !== email));
-    //     } catch (error) {
-    //         console.error("Error deleting contact:", error);
-    //     }
-    // };
    
    
     return (
@@ -291,8 +273,6 @@ const MainContent: FC = () => {
                                             {content.map((document, index)=>(
                                                 <tr key={index}>
                                                     
-                                                    
-
                                                     <td>
                                                         {isEditThis === document.email ? (
                                                             <>
@@ -350,8 +330,10 @@ const MainContent: FC = () => {
                                                                 >
                                                                     Edit
                                                                 </button>
+                                                                
                                                             </>
                                                         )}
+                                                        
                                                     </td>
                                                     <td >
                                                     {document.email}
@@ -378,6 +360,7 @@ const MainContent: FC = () => {
             </div>
             
             </div>
+            
         </main>
     );
 };

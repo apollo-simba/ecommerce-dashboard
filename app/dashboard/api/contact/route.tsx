@@ -77,24 +77,24 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
     try {
-        await connectDB();
-        const { email, fullname } = await req.json();
+        await connectDB();// connect between browser and MongoDB.
+        const { email, fullname } = await req.json();//send the Data-email & fullname from MainContent
 
         if (!email || !fullname) {
             return NextResponse.json({ error: "Missing email or fullname" }, { status: 400 });
         }
 
         const updatedContact = await Contact.findOneAndUpdate(
-            { email },
-            { fullname },
+            { email },//this value is the first argument and it find the data as it's value(MY thought)
+            { fullname },//this is the second argument and then it converts the value of fullname in MongoDB as argument-fullname(MY thought)
             { new: true } // Ensure we get the updated document
         );
 
         if (!updatedContact) {
             return NextResponse.json({ error: "Contact not found" }, { status: 404 });
-        }
+        }//this line support the code by removing the error. It's very neccessary.
 
-        return NextResponse.json({ message: "Contact updated", data: updatedContact });
+        return NextResponse.json({ message: "Contact updated", data: updatedContact });// and then returns the updated Data.
     } catch (error) {
         console.error("Error updating contact:", error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
