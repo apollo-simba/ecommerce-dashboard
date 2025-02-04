@@ -75,7 +75,8 @@ const AddDocument: React.FC = () => {
                     className="form-control"
                     id="documentName"
                     value={documentName}
-                    onChange={handleDocumentNameChange}
+                    onChange={(e)=>setDocumentName(e.target.value)}
+                    onBlur={()=>console.log('111111111111111111')}
                 />
                 <label htmlFor="description" className="form-label mt-3">
                     Description

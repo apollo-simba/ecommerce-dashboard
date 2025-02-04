@@ -1,7 +1,8 @@
 import connectDB from "@/app/lib/mongodb";
 import Contact from "@/app/models/contact";
-import { NextResponse } from "next/server";
+import { NextRequest,NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { NextApiRequest,NextApiResponse } from "next";
 
 interface ContactRequestBody {
     id: number,
@@ -71,5 +72,31 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ message: "Contact deleted successfully" }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: "Error deleting contact", error }, { status: 500 });
+    }
+}
+
+export async function PUT(req: Request) {
+    try {
+        await connectDB();
+        const { email, fullname } = await req.json();
+
+        if (!email || !fullname) {
+            return NextResponse.json({ error: "Missing email or fullname" }, { status: 400 });
+        }
+
+        const updatedContact = await Contact.findOneAndUpdate(
+            { email },
+            { fullname },
+            { new: true } // Ensure we get the updated document
+        );
+
+        if (!updatedContact) {
+            return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Contact updated", data: updatedContact });
+    } catch (error) {
+        console.error("Error updating contact:", error);
+        return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }

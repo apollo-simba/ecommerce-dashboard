@@ -1,9 +1,11 @@
 "use client";
-import React, { FC, useState ,useEffect} from 'react';
+import React, { FC, useState ,useEffect,ChangeEvent} from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import "../styles/globals.css";
 import "@/app/styles/main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 interface Document{
     id: number,
@@ -19,6 +21,8 @@ interface Contact {
 }
 
 const MainContent: FC = () => {
+    const [isEditThis , setIsEditThis] = useState<string | null>(null);
+    const [editFullname, setEditFullname] = useState<string>('');
     const[count, setCount] = useState<number>(0);
     const [documents, setDocuments] = useState<Document[]>([]);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -101,9 +105,64 @@ const MainContent: FC = () => {
         } catch (error) {
             console.error("Error deleting contact:", error);
         }
-        
+    };
+    const handleEdit = (email: string, currentFullname: string) => {
+        setIsEditThis(email);
+        setEditFullname(currentFullname);
+    };
+
+    // Handle updating the data
+    const updateData = async (email: string) => {
+        try {
+            const resp = await fetch("dashboard/api/contact", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, fullname: editFullname }),
+            });
+    
+            if (!resp.ok) {
+                const errorData = await resp.json();
+                throw new Error(`Error: ${resp.status} - ${errorData.error}`);
+            }
+    
+            console.log("Update successful");
+    
+            // Fetch updated data from MongoDB
+            await getContactHistory();
+    
+            setIsEditThis(null);
+        } catch (error) {
+            console.error("Error updating contact:", error);
+        }
     };
     
+    const cancelEdit = () => {
+        setIsEditThis(null);
+    };
+
+    // Handle delete event
+    // const deleteEvent = async (email: string) => {
+    //     try {
+    //         const resp = await fetch("dashboard/api/contact", {
+    //             method: "DELETE",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({ email }),
+    //         });
+
+    //         if (!resp.ok) throw new Error(`Error: ${resp.status}`);
+
+    //         console.log("Delete request successful.");
+    //         setContent((prevContent) => prevContent.filter((item) => item.email !== email));
+    //     } catch (error) {
+    //         console.error("Error deleting contact:", error);
+    //     }
+    // };
+   
+   
     return (
         <main>
             <div className="head-title">
@@ -211,7 +270,7 @@ const MainContent: FC = () => {
                         <form >
 
         
-                        <div className="w-full max-w-[700px]  px-4 mr-[300px]">
+                        <div className="w-full max-w-[1000px]  px-4 mr-[300px]">
                                 <div className="second-part">
                                     <div className="col-md-1 border-end"></div>
 
@@ -222,28 +281,93 @@ const MainContent: FC = () => {
                                         <thead>
                                             <tr>
                                                 
-                                                <th>fullname</th>
-                                                <th>email</th>
-                                                <th>message</th>
+                                                <th>Fullname</th>
+                                                <th>Email</th>
+                                                <th>Message</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {content.map((document)=>(
-                                                <tr key={document.email}>
+                                            {content.map((document, index)=>(
+                                                <tr key={index}>
                                                     
-                                                    <td>{document.fullname}</td>
-                                                    <td>{document.email}</td>
+                                                    
+
+                                                    <td>
+                                                        {isEditThis === document.email ? (
+                                                            <>
+                                                                <input
+                                                                    type="text"
+                                                                    value={editFullname}
+                                                                    onChange={(e) => setEditFullname(e.target.value)}
+                                                                />
+                                                                <button 
+                                                                style={{
+                                                                    padding: '10px',
+                                                                    backgroundColor: '#f44336',
+                                                                    color: 'white',
+                                                                    border: 'none',
+                                                                    borderRadius: '8px',
+                                                                    marginLeft: '10px',
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                                    className="btn btn-success" 
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        updateData(document.email);
+                                                                    }}
+                                                                >
+                                                                    Save
+                                                                </button>
+                                                                <button 
+                                                                    className="btn btn-secondary" 
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        cancelEdit();
+                                                                    }}
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {document.fullname}
+                                                                <button 
+                                                                style={{
+                                                                    padding: '10px',
+                                                                    backgroundColor: 'blue',
+                                                                    color: 'white',
+                                                                    border: 'none',
+                                                                    borderRadius: '8px',
+                                                                    marginLeft: '10px',
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                                    className="btn btn-primary" 
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleEdit(document.email, document.fullname);
+                                                                    }}
+                                                                >
+                                                                    Edit
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                    </td>
+                                                    <td >
+                                                    {document.email}
+                                                    </td>
                                                     <td>{document.message}</td>
                                                     <td>
                                                         <button className="btn btn-primary" type="button" onClick={()=>deleteEvent(document.email)}>Delete</button>
                                                     </td>
+                                                    
                                                 </tr>
                                             ))}
 
                                         </tbody> 
                                         
                                     </table>
+                                    
                                 </div>
                             </div>
                         </div>
