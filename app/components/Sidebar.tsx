@@ -2,8 +2,6 @@
 import React, { FC } from 'react';
 import "../styles/globals.css";
 import Link from 'next/link';
-
-
 const Sidebar: FC = () => {
 
     return (

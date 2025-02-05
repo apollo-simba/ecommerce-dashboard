@@ -1,18 +1,12 @@
 import connectDB from "@/app/lib/mongodb";
 import Contact from "@/app/models/contact";
-import { NextRequest,NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { NextApiRequest,NextApiResponse } from "next";
-
 interface ContactRequestBody {
     id: number,
     fullname: string;
     email: string;
     message: string;
-}
-
-interface ValidationError {
-    [key: string]: { message: string };
 }
 
 export async function GET(): Promise<Response> {
@@ -78,15 +72,16 @@ export async function DELETE(req: Request) {
 export async function PUT(req: Request) {
     try {
         await connectDB();// connect between browser and MongoDB.
-        const { email, fullname } = await req.json();//send the Data-email & fullname from MainContent
+        const { email, fullname, message } = await req.json();//send the Data-email & fullname from MainContent
 
-        if (!email || !fullname) {
+        if (!email || !fullname||!message) {
             return NextResponse.json({ error: "Missing email or fullname" }, { status: 400 });
         }
 
         const updatedContact = await Contact.findOneAndUpdate(
-            { email },//this value is the first argument and it find the data as it's value(MY thought)
+            //this value is the first argument and it find the data as it's value(MY thought)
             { fullname },//this is the second argument and then it converts the value of fullname in MongoDB as argument-fullname(MY thought)
+            { message },
             { new: true } // Ensure we get the updated document
         );
 

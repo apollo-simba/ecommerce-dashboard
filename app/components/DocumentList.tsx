@@ -10,11 +10,6 @@ interface Document{
     image?: string,
 }
 
-interface Contact {
-    fullname: string,
-    email: string,
-    message: string,
-}
 const DocumentList =()=>{
     const [documents, setDocuments] = useState<Document[]>([]);
     const [showModal, setShowModal] = useState<boolean>(false);
