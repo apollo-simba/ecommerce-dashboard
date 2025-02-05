@@ -29,9 +29,9 @@ export default function Home() {
   const addTask = (): void => {
     console.log("add button clicked")
     if (!title || !description || !dueDate || !dueTime) return;
-    
+
     const dueDateTime = new Date(`${dueDate}T${dueTime}:00`);
-      
+
     setTasks((prevTasks) => [
       ...prevTasks,
       { id: prevTasks.length, title, description, dueDateTime },
@@ -52,23 +52,23 @@ export default function Home() {
         console.log("this content returned");
         return setTimeout(() => {
           alert(`Reminder: ${task.title} is due in 1 minute.`);
-          },timeDiff - 6000);
-       
-    }
+        }, timeDiff - 6000);
+
+      }
 
 
-    console.log("the null");
+      console.log("the null");
       return null;
-  });
+    });
     return () => {
       console.log("that content retrned");
       reminders.forEach((reminder) => {
-      if (reminder) clearTimeout(reminder);
+        if (reminder) clearTimeout(reminder);
       });
     };
 
-  },[tasks]);
-    
+  }, [tasks]);
+
 
   const removeTask = (id: number): void => {
     console.log("add clicked");

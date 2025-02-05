@@ -74,7 +74,7 @@ export async function PUT(req: Request) {
         await connectDB();// connect between browser and MongoDB.
         const { email, fullname, message } = await req.json();//send the Data-email & fullname from MainContent
 
-        if (!email || !fullname||!message) {
+        if (!email || !fullname || !message) {
             return NextResponse.json({ error: "Missing email or fullname" }, { status: 400 });
         }
 

@@ -42,7 +42,7 @@ const AddDocument: React.FC = () => {
             toast.error('Please fill in all fields.');
             return;
         }
-        
+
         const currentDate = new Date().toLocaleDateString();
         const existingDocuments: Document[] = JSON.parse(
             localStorage.getItem('document') || '[]'
@@ -65,7 +65,7 @@ const AddDocument: React.FC = () => {
 
     return (
         <>
-            
+
             <div className="mb-3 container" style={{ width: '70%' }}>
                 <label htmlFor="documentName" className="form-label">
                     Document Name
@@ -75,8 +75,8 @@ const AddDocument: React.FC = () => {
                     className="form-control"
                     id="documentName"
                     value={documentName}
-                    onChange={(e)=>setDocumentName(e.target.value)}
-                    onBlur={()=>console.log('111111111111111111')}
+                    onChange={(e) => setDocumentName(e.target.value)}
+                    onBlur={() => console.log('111111111111111111')}
                 />
                 <label htmlFor="description" className="form-label mt-3">
                     Description

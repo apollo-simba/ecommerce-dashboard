@@ -6,10 +6,10 @@ const Sidebar: FC = () => {
 
     return (
         <div id='sidebar'>
-            <a  className="brand">
-                <img 
-                    src="https://media.geeksforgeeks.org/gfg-gg-logo.svg" 
-                    alt="GFG Logo" 
+            <a className="brand">
+                <img
+                    src="https://media.geeksforgeeks.org/gfg-gg-logo.svg"
+                    alt="GFG Logo"
                 />
                 <span className="text">admin Panel</span>
             </a>

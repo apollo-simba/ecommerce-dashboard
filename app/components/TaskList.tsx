@@ -13,14 +13,14 @@ type TaskListProps = {
   removeTask: (id: number) => void;
 };
 
-const TaskList: React.FC<TaskListProps> = ({ tasks,removeTask }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, removeTask }) => {
   return (
     <div>
       <h2>Tasks</h2>
       {tasks.map((task) => (
         <div key={task.id}>
-          <Task  task={task} />
-          {<button onClick={()=>removeTask(task.id)}>Removetask</button>}
+          <Task task={task} />
+          {<button onClick={() => removeTask(task.id)}>Removetask</button>}
         </div>
 
       ))}

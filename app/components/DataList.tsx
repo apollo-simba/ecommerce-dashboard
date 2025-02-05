@@ -36,7 +36,7 @@ const DataList: FC = () => {
         }
     };
 
-    
+
 
     useEffect(() => {
         getContactHistory();
@@ -48,31 +48,32 @@ const DataList: FC = () => {
     };
     const saveChangedItem = async () => {
         try {
-            const res = await fetch('/dashboard/api/contact',{
+            const res = await fetch('/dashboard/api/contact', {
                 method: "PUT",
-                headers: {"Content-Type": "application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    email:editedData.email,
-                    fullname: editedData.fullname, 
-                    message:editedData.message,
+                    email: editedData.email,
+                    fullname: editedData.fullname,
+                    message: editedData.message,
                 })
             })
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(`Error: ${res.status} - ${errorData.error}`);
             }
-    
-            console.log("Update successful");          
+
+            console.log("Update successful");
         } catch (error) {
             console.error("Error updating contact:", error);
         }
     };
- 
+
     const handleSave = (index: number) => {
         const updatedContent = [...content];
         updatedContent[index] = editedData;
-       console.log(updatedContent[index]);
+        console.log(updatedContent[index]);
         setContent(updatedContent); // Update the main data source
         setEditingIndex(null); // Disable editing
         saveChangedItem();

@@ -25,7 +25,7 @@ const App: React.FC = () => {
             const updatedList = list.map((item, index) =>
                 index === editIndex ? { ...item, value: userInput } : item
             );
-            console.log('this - ',userInput);
+            console.log('this - ', userInput);
             setList(updatedList);
             setEditIndex(null); // Reset edit mode
         } else {
