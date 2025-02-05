@@ -8,7 +8,7 @@ interface ContactResponse {
 }
 
 export default function ContactForm() {
-    
+    const [id, setId] = useState<number>(0);
     const [fullname, setFullname] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [message, setMessage] = useState<string>("");
@@ -24,7 +24,7 @@ export default function ContactForm() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    
+                    id,
                     fullname,
                     email,
                     message,

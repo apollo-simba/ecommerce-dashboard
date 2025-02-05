@@ -4,7 +4,9 @@ import { FaUserCircle } from 'react-icons/fa';
 import "../styles/globals.css";
 import "@/app/styles/main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import Head from './head';
+import DocumentList from './DocumentList';
+import DataList from './DataList';
 
 
 
@@ -28,6 +30,7 @@ const MainContent: FC = () => {
     const[count, setCount] = useState<number>(0);
     const [documents, setDocuments] = useState<Document[]>([]);
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [content, setContent] = useState<Contact[]>([]);
     const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
     useEffect(()=>{
         const storedDocuments = JSON.parse(localStorage.getItem('document')||'[]');
@@ -49,7 +52,7 @@ const MainContent: FC = () => {
         setCount(count-1);
         localStorage.setItem('document',JSON.stringify(updatedDocuments));
     }
-    const [content, setContent] = useState<Contact[]>([]);
+    
         
     const getContactHistory = async () => {
         try {
@@ -162,7 +165,7 @@ const MainContent: FC = () => {
                 </a>
             </div>
 
-            <ul className="box-info">
+            {/* <ul className="box-info">
                 <li>
                     <i className="bx bxs-cart"></i>
                     <span className="text">
@@ -185,14 +188,15 @@ const MainContent: FC = () => {
                         <p>Total Revenue</p>
                     </span>
                 </li>
-            </ul>
+            </ul> */}
+            <Head />
             <div className="w-full max-w-[1800px] ml-[40px] mr-[40px] px-4 mt-5 ">
                 <div >
                     <div className="col-md-1-  border-end">
 
                     </div>
                     <div className="db" >
-                        <div className="first-part">
+                        {/* <div className="first-part">
                             <h2>Document List</h2>
 
                             <table className="table">
@@ -210,7 +214,11 @@ const MainContent: FC = () => {
                                             <td>{document.id}</td>
                                             <td>{document.name}</td>
                                             <td>{document.date}</td>
-                                            <td>
+                                            <td style={{
+                                                display:'flex',
+                                                justifyContent:'space-between',
+                                                
+                                            }}>
                                                 <button className="btn btn-primary" onClick={()=>handleView(document.id)}>
                                                     View
                                                 </button>
@@ -248,11 +256,12 @@ const MainContent: FC = () => {
                                     </div>
                                 </div>
                             </div>
-                        )}
-                        <form >
+                        )} */}
+                        <DocumentList />
+                        {/* <form >
 
         
-                        <div className="w-full max-w-[1000px]  px-4 mr-[300px]">
+                        <div className="w-full max-w-[1000px]  px-4 mr-[200px]">
                                 <div className="second-part">
                                     <div className="col-md-1 border-end"></div>
 
@@ -353,7 +362,8 @@ const MainContent: FC = () => {
                                 </div>
                             </div>
                         </div>
-                        </form>
+                        </form> */}
+                        <DataList />
                         
                 </div>
                 
